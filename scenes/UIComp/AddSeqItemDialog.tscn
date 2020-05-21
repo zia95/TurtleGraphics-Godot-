@@ -1,0 +1,72 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://fonts/default_font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://graphics/ui/button/btn_seq_rmv.png" type="Texture" id=2]
+[ext_resource path="res://graphics/ui/button/btn_seq_add.png" type="Texture" id=3]
+[ext_resource path="res://scenes/UIComp/ButtonDefault.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scripts/UI/AddSeqItemDialog.gd" type="Script" id=5]
+
+[node name="PopupDialog" type="PopupDialog"]
+margin_right = 200.0
+margin_bottom = 120.0
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+SeqTypePath = NodePath("DialogLayout/SeqType")
+AmountContainerPath = NodePath("DialogLayout/AmountContainer")
+AmountTextPath = NodePath("DialogLayout/AmountContainer/TextEdit")
+btnClosePath = NodePath("DialogLayout/ResultButtons/btnClose")
+btnAddPath = NodePath("DialogLayout/ResultButtons/btnAdd")
+
+[node name="DialogLayout" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SeqType" type="OptionButton" parent="DialogLayout"]
+margin_right = 200.0
+margin_bottom = 20.0
+
+[node name="AmountContainer" type="HBoxContainer" parent="DialogLayout"]
+margin_top = 24.0
+margin_right = 200.0
+margin_bottom = 39.0
+
+[node name="Label" type="Label" parent="DialogLayout/AmountContainer"]
+margin_right = 56.0
+margin_bottom = 15.0
+custom_fonts/font = ExtResource( 1 )
+text = "Amount:"
+
+[node name="TextEdit" type="TextEdit" parent="DialogLayout/AmountContainer"]
+margin_left = 60.0
+margin_right = 200.0
+margin_bottom = 15.0
+size_flags_horizontal = 3
+text = "100"
+
+[node name="ResultButtons" type="NinePatchRect" parent="DialogLayout"]
+margin_top = 43.0
+margin_right = 200.0
+margin_bottom = 43.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="btnClose" parent="DialogLayout/ResultButtons" instance=ExtResource( 4 )]
+margin_right = 64.0
+margin_bottom = 64.0
+rect_clip_content = false
+texture_normal = ExtResource( 2 )
+
+[node name="btnAdd" parent="DialogLayout/ResultButtons" instance=ExtResource( 4 )]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -64.0
+margin_right = 0.0
+margin_bottom = 64.0
+rect_clip_content = false
+texture_normal = ExtResource( 3 )

@@ -11,6 +11,8 @@ var turtle_pen
 var timer_speed
 #var pen_up:bool
 
+
+
 class TurtleCommander:
 	
 	enum CType { FORWARD, BACKWARD, ROTATE }
@@ -127,7 +129,7 @@ func turtle_set_speed(spd:int):
 		spd = 10
 	
 	var speed_to_wt = float(spd)/1000
-	print_debug("timer ____ waitT:" + String(speed_to_wt) + "____spd:" + String(spd))
+	#print_debug("timer ____ waitT:" + String(speed_to_wt) + "____spd:" + String(spd))
 	timer_speed.set_wait_time(speed_to_wt)
 
 func turtle_set_speed_timer():

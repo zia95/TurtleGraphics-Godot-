@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scenes/UIComp/ButtonDefault.tscn" type="PackedScene" id=1]
+[ext_resource path="res://graphics/ui/button/btn_seq_switch.png" type="Texture" id=2]
+
+[node name="ButtonSequence" instance=ExtResource( 1 )]
+margin_right = 64.0
+margin_bottom = 64.0
+texture_normal = ExtResource( 2 )

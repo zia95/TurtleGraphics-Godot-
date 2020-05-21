@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/1.jpg-fd51916988e4412d44c5a05abeb01aa6.stex"
+path="res://.import/btn_seq_rmv_s.png-563454fd86ab437053f7ed62607a54ce.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://graphics/board/1.jpg"
-dest_files=[ "res://.import/1.jpg-fd51916988e4412d44c5a05abeb01aa6.stex" ]
+source_file="res://graphics/ui/button/btn_seq_rmv_s.png"
+dest_files=[ "res://.import/btn_seq_rmv_s.png-563454fd86ab437053f7ed62607a54ce.stex" ]
 
 [params]
 
