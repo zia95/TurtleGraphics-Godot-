@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://fonts/default_font.tres" type="DynamicFont" id=1]
+
+[node name="ButtonStandardDefault" type="Button"]
+margin_right = 124.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 100, 32 )
+custom_fonts/font = ExtResource( 1 )
+text = "BUTTON_DEF_STD"
+__meta__ = {
+"_edit_use_anchors_": false
+}

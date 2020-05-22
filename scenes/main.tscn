@@ -9,6 +9,7 @@
 [node name="Main" type="Node"]
 
 [node name="Background" type="Sprite" parent="."]
+visible = false
 position = Vector2( 684, 391 )
 scale = Vector2( 1.5, 1.5 )
 z_index = -1

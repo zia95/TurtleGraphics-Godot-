@@ -1,7 +1,61 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://scenes/UIComp/ButtonSequence.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/UIComp/ButtonStandardDefault.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scripts/UI/UI.gd" type="Script" id=2]
+
+[sub_resource type="Animation" id=1]
+resource_name = "hide_list"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 40 ), Vector2( -200, 40 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "hide_list (copy)"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( -200, 40 ), Vector2( 0, 40 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, true ]
+}
 
 [node name="UI" type="Control"]
 anchor_right = 1.0
@@ -15,19 +69,24 @@ SeqScrollContainerPath = NodePath("ScrollContainer")
 SeqScrollListPath = NodePath("ScrollContainer/Sequence")
 
 [node name="ButtonSequence" parent="." instance=ExtResource( 1 )]
-margin_top = 4.0
-margin_bottom = 52.0
-stretch_mode = 0
+rect_min_size = Vector2( 200, 32 )
+text = "Sequence"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 anchor_bottom = 1.0
-margin_top = 80.0
+margin_top = 40.0
 margin_right = 200.0
 margin_bottom = 6.10352e-05
 rect_clip_content = false
+scroll_horizontal_enabled = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="ScrollContainer"]
+anims/hide_list = SubResource( 1 )
+"anims/hide_list (copy)" = SubResource( 2 )
+blend_times = [ "hide_list", "hide_list", 51.428 ]
 
 [node name="Sequence" type="VBoxContainer" parent="ScrollContainer"]
 __meta__ = {
