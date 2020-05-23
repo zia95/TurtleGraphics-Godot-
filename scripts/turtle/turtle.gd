@@ -1,9 +1,14 @@
 extends KinematicBody2D
 
-export(NodePath) var lineContainerPath
+export(NodePath) var UIPath
+
 export (int) var speed = 1
 export(bool) var pen_up = false
 export(int) var pen_width = 5
+
+
+var turtle_ui
+
 
 var turtle_pen_arr = []
 var turtle_pen
@@ -13,102 +18,76 @@ var timer_speed
 
 
 
-class TurtleCommander:
+class TurtleCommanderInterpreterr:
 	
-	enum CType { FORWARD, BACKWARD, ROTATE }
+	var turtle
+	var run_data
+	var curr_cmd_idx:int
 	
-	var _turtle
-	var _command_type
-	var _command_val:int
+	var is_done
+	var commands_array
 	
-	var next_command  : TurtleCommander
-		
-	#func _init(turtle, com_type, com_val):
-	#	set_vars(turtle, com_type, com_val)
+	func _init():
+		is_done = true
+		commands_array = TurtleSettings.get_turtle_cmd_str()
 	
-	func set_vars(turtle, com_type, com_val):
-		self._turtle = turtle
-		self._command_type = com_type
-		self._command_val = com_val
-		self.next_command = null
-	
-	func set_obj(com : TurtleCommander):
-		self._turtle = com._turtle
-		self._command_type = com.com_type
-		self._command_val = com.com_val
-		self.next_command = null
-	
+	func set_and_run(turtl, run_dt):
+		curr_cmd_idx = 0
+		is_done = false
+		turtle = turtl
+		run_data = run_dt
 	
 	func done():
-		return _command_val == 0
+		return is_done
 	
-	func set_command(command : TurtleCommander):
-		next_command = command
-	
-	func do_curr():
+	func do():
 		if done():
 			return false
+		var curr_cmd : TurtleSettings.TurtleCommand = run_data[curr_cmd_idx]
 		
-		if _command_type == CType.FORWARD:
-			_turtle.turtle_move_forward(10)
-			_command_val -= 1
-		if _command_type == CType.BACKWARD:
-			_turtle.turtle_move_forward(-10)
-			_command_val -= 1
-		if _command_type == CType.ROTATE:
-			_turtle.turtle_rotate(_command_val)
-			_command_val = 0
 		
-		return true
+		
+		match curr_cmd.cmd_idx:
+			TurtleSettings.TurtleCommands.left:
+				turtle.turtle_rotate(-90)
+			TurtleSettings.TurtleCommands.right:
+				turtle.turtle_rotate(90)
+			TurtleSettings.TurtleCommands.penup:
+				turtle.set_pen(true)
+			TurtleSettings.TurtleCommands.pendown:
+				turtle.set_pen(false)
+			TurtleSettings.TurtleCommands.end_repeat:
+				print_debug("end_repeat")
+				var rpt = curr_cmd.do_repeat()
+				if rpt >= 0:
+					curr_cmd_idx = rpt
+			TurtleSettings.TurtleCommands.repeat:
+				print_debug("repeat ->" + String(curr_cmd.total_amnt))
+				# do we want to ignore repeat???
+			TurtleSettings.TurtleCommands.forward:
+				turtle.turtle_move_forward(1)
+			TurtleSettings.TurtleCommands.backward:
+				turtle.turtle_move_forward(-1)
+			TurtleSettings.TurtleCommands.rotation:
+				turtle.turtle_rotate(curr_cmd.total_amnt)
+		
+		curr_cmd.get_amount_and_dec()
+		if curr_cmd.is_finished():
+			curr_cmd_idx += 1
+			curr_cmd.reset()
+			
+			if curr_cmd.cmd_idx == TurtleSettings.TurtleCommands.end_repeat:
+				curr_cmd_idx = curr_cmd.idx+1
+				#print_debug("index is " + String(curr_cmd_idx))
+		
+		if run_data.size() <= curr_cmd_idx:
+			is_done = true
+		
 	
 
-var turtle_commander : TurtleCommander
-
-func execute_command(command):
-	
-	if command == "lft":
-		turtle_commander.set_vars(self, TurtleCommander.CType.ROTATE, -90)
-		command = "added"
-	
-	if command == "rgt":
-		turtle_commander.set_vars(self, TurtleCommander.CType.ROTATE, 90)
-		command = "added"
-	
-	if command == "pu":
-		pen_up = true
-		set_pen(pen_up)
-	
-	if command == "pd":
-		pen_up = false
-		set_pen(pen_up)
-	
-	if command.begins_with("fd"):
-		command.erase(0, 2)
-		var dist = command.to_int()
-		turtle_commander.set_vars(self, TurtleCommander.CType.FORWARD, dist)
-	
-	
-	if command.begins_with("bw"):
-		command.erase(0, 2)
-		var dist = command.to_int()
-		turtle_commander.set_vars(self, TurtleCommander.CType.BACKWARD, dist)
-	
-	
-	if command.begins_with("spd"):
-		command.erase(0, 3)
-		speed = command.to_int()
-		turtle_set_speed(speed)
-	
-	if command.begins_with("rot"):
-		command.erase(0, 3)
-		var rot = command.to_int()
-		turtle_commander.set_vars(self, TurtleCommander.CType.ROTATE, rot)
-	
-	#print_debug(command)
+var turtle_inter : TurtleCommanderInterpreterr
 
 # BEGINING OF TURTLE MOVEMENT
-
-
 
 func turtle_move_forward(step_speed):
 	var velocity = Vector2(0, -step_speed).rotated(rotation)
@@ -129,7 +108,7 @@ func turtle_set_speed(spd:int):
 		spd = 10
 	
 	var speed_to_wt = float(spd)/1000
-	#print_debug("timer ____ waitT:" + String(speed_to_wt) + "____spd:" + String(spd))
+	print_debug("timer ____ waitT:" + String(timer_speed.wait_time) + "____spd:" + String(spd))
 	timer_speed.set_wait_time(speed_to_wt)
 
 func turtle_set_speed_timer():
@@ -140,8 +119,8 @@ func turtle_set_speed_timer():
 
 var line_last_point
 func timer_speed_timeout():
-	if turtle_commander != null:
-		turtle_commander.do_curr()
+	if turtle_inter != null:
+		turtle_inter.do()
 	
 	#line draw......
 	if is_pen_up() == false:
@@ -183,11 +162,13 @@ func turtle_new_pen():
 
 # END OF TURTLE MOVEMENT
 
+func on_run_btn_pressed(run_data):
+	turtle_inter.set_and_run(self, run_data)
+
 func _ready():
-	turtle_commander = TurtleCommander.new()
+	turtle_ui = get_node(UIPath)
+	turtle_inter = TurtleCommanderInterpreterr.new()
 	turtle_set_speed_timer()
 	set_pen(pen_up)
-
-
-func _physics_process(delta):
-	pass
+	
+	turtle_ui.connect("RunBtnClicked", self, "on_run_btn_pressed")

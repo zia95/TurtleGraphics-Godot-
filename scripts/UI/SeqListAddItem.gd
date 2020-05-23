@@ -31,8 +31,7 @@ func set_seq_amnt(seq_amnt:int):
 	if seq_amnt > 0:
 		txtedt_seq_amnt.text = String(seq_amnt)
 
-var seq_item = [ "left", "right", "penup", "pendown","end repeat", "repeat", "forward", 
-"backward", "rotation" ]
+onready var seq_item = TurtleSettings.get_turtle_cmd_str()
 
 func populate_seq():
 	for itm in seq_item:
@@ -51,7 +50,7 @@ func on_btn_add_pressed():
 		ammount_result = -1
 	
 	var slectd = seq_type.get_selected_id()
-	_parent.on_seq_list_item(seq_item[slectd], slectd, ammount_result)
+	_parent.on_seq_list_item(slectd, ammount_result)
 	
 	self.queue_free()
 
