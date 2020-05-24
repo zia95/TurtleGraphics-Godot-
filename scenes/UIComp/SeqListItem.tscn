@@ -1,72 +1,56 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://fonts/default_font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://graphics/ui/button/down64.png" type="Texture" id=1]
 [ext_resource path="res://scenes/UIComp/ButtonSStandardDefault.tscn" type="PackedScene" id=2]
+[ext_resource path="res://graphics/ui/button/remove64.png" type="Texture" id=3]
+[ext_resource path="res://graphics/ui/button/up64.png" type="Texture" id=4]
 [ext_resource path="res://scripts/UI/SeqListItem.gd" type="Script" id=5]
+[ext_resource path="res://scenes/UIComp/SeqListItem_Text.tscn" type="PackedScene" id=6]
+[ext_resource path="res://theme/tur_dark_theme_mobile.tres" type="Theme" id=7]
 
-[node name="SeqListItem" type="NinePatchRect"]
-margin_right = 100.0
-margin_bottom = 50.0
-rect_min_size = Vector2( 100, 50 )
+[node name="SeqListItem" type="Control"]
+rect_min_size = Vector2( 600, 300 )
+theme = ExtResource( 7 )
 script = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-LabelText1Path = NodePath("TextRow/Text_1")
-LabelText2Path = NodePath("TextRow/Text_2")
-MoveUpButtonPath = NodePath("ButtonRow/MoveUpButton")
-MoveDownButtonPath = NodePath("ButtonRow/MoveDownButton")
-RemoveButtonPath = NodePath("ButtonRow/RemoveItemButton")
 
-[node name="TextRow" type="HBoxContainer" parent="."]
-margin_top = 5.0
-margin_right = 103.0
-margin_bottom = 15.0
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 20.0
+margin_top = 20.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Text_1" type="Label" parent="TextRow"]
-margin_right = 32.0
-margin_bottom = 15.0
-custom_fonts/font = ExtResource( 1 )
-text = "SEQT"
-uppercase = true
+[node name="Text_1" parent="VBoxContainer" instance=ExtResource( 6 )]
+margin_right = 248.0
+margin_bottom = 107.0
+
+[node name="ButtonRow" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 111.0
+margin_right = 248.0
+margin_bottom = 218.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Text_2" type="Label" parent="TextRow"]
-margin_left = 36.0
-margin_right = 84.0
-margin_bottom = 15.0
-custom_fonts/font = ExtResource( 1 )
-text = "SEQAMT"
-align = 1
-valign = 1
-uppercase = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="MoveUpButton" parent="VBoxContainer/ButtonRow" instance=ExtResource( 2 )]
+margin_right = 80.0
+margin_bottom = 107.0
+text = ""
+icon = ExtResource( 4 )
 
-[node name="ButtonRow" type="HBoxContainer" parent="."]
-margin_top = 30.0
-margin_right = 103.0
-margin_bottom = 21.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="RemoveItemButton" parent="VBoxContainer/ButtonRow" instance=ExtResource( 2 )]
+margin_left = 84.0
+margin_right = 164.0
+margin_bottom = 107.0
+text = ""
+icon = ExtResource( 3 )
 
-[node name="MoveUpButton" parent="ButtonRow" instance=ExtResource( 2 )]
-margin_right = 28.0
-text = "UP"
-
-[node name="RemoveItemButton" parent="ButtonRow" instance=ExtResource( 2 )]
-margin_left = 32.0
-margin_right = 60.0
-text = "RM"
-
-[node name="MoveDownButton" parent="ButtonRow" instance=ExtResource( 2 )]
-margin_left = 64.0
-margin_right = 92.0
-text = "DN"
+[node name="MoveDownButton" parent="VBoxContainer/ButtonRow" instance=ExtResource( 2 )]
+margin_left = 168.0
+margin_right = 248.0
+margin_bottom = 107.0
+text = ""
+icon = ExtResource( 1 )

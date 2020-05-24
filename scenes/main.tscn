@@ -1,23 +1,15 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://graphics/turtle/1.png" type="Texture" id=1]
 [ext_resource path="res://scenes/UI.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scripts/turtle/turtle.gd" type="Script" id=3]
-[ext_resource path="res://graphics/bg/1.jpg" type="Texture" id=4]
 
 [node name="Main" type="Node"]
-
-[node name="Background" type="Sprite" parent="."]
-visible = false
-position = Vector2( 684, 391 )
-scale = Vector2( 1.5, 1.5 )
-z_index = -1
-texture = ExtResource( 4 )
 
 [node name="UI" parent="." instance=ExtResource( 2 )]
 
 [node name="Turtle" type="KinematicBody2D" parent="."]
-position = Vector2( 400, 500 )
+position = Vector2( 700, 500 )
 rotation = 1.5708
 z_index = -1
 script = ExtResource( 3 )

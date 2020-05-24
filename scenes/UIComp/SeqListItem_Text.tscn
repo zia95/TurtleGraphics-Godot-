@@ -1,0 +1,10 @@
+[gd_scene format=2]
+
+[node name="SeqListItem_Text" type="Label"]
+margin_right = 108.0
+margin_bottom = 14.0
+text = "SEQT"
+uppercase = true
+__meta__ = {
+"_edit_use_anchors_": false
+}

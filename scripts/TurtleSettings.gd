@@ -10,12 +10,19 @@ static func get_turtle_cmd_str():
 	return [ "left", "right", "penup", "pendown","end repeat", "repeat", "forward", 
 "backward", "rotation" ]
 
+
+static func turtle_cmd_takes_extra(idx):
+	if idx == TurtleCommands.repeat or idx == TurtleCommands.forward or \
+	idx == TurtleCommands.backward or idx == TurtleCommands.rotation:
+		return true
+	return false
+
 static func get_turtle_cmd_itm_text(idx, amnt):
 	var seq = get_turtle_cmd_str()[idx]
 	if amnt == -1:
-		return ["-> ", seq]
+		return ["+", seq]
 	else:
-		return [seq + " -> ", String(amnt)]
+		return ["+ " + seq, String(amnt)]
 	
 
 static func get_turtle_cmd_idx(cmd:String) -> int:

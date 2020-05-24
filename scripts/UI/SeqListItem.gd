@@ -1,15 +1,6 @@
-extends NinePatchRect
+extends Control
 
-
-export(NodePath) var LabelText1Path
-export(NodePath) var LabelText2Path
-
-export(NodePath) var MoveUpButtonPath
-export(NodePath) var MoveDownButtonPath
-export(NodePath) var RemoveButtonPath
-
-var text_1 : Label
-var text_2 : Label
+var display_text : Label
 
 var btn_mv_up : Button
 var btn_mv_dwn : Button
@@ -77,14 +68,13 @@ func set_item(idx, amnt):
 	cmd_idx = idx
 	cmd_amnt = amnt
 
-#var list_idx:int
-#func set_idx(idx:int): list_idx=idx
-#func get_idx() -> int: return list_idx
-
 func update_text():
-	var t = TurtleSettings.get_turtle_cmd_itm_text(cmd_idx, cmd_amnt)
-	text_1.text = t[0]
-	text_2.text = t[1]
+	#var t = TurtleSettings.get_turtle_cmd_itm_text(cmd_idx, cmd_amnt)
+	if TurtleSettings.turtle_cmd_takes_extra(cmd_idx):
+		display_text.text = TurtleSettings.get_turtle_cmd_str()[cmd_idx] + " : " + String(cmd_amnt)
+	else:
+		display_text.text = TurtleSettings.get_turtle_cmd_str()[cmd_idx]
+	
 
 func get_btn_rmv():
 	return btn_rmv
@@ -96,12 +86,12 @@ func get_btn_mv_dwn():
 	return btn_mv_dwn
 
 func _ready():
-	text_1 = get_node(LabelText1Path)
-	text_2 = get_node(LabelText2Path)
+	display_text = $VBoxContainer/Text_1
 	
-	btn_mv_up = get_node(MoveUpButtonPath)
-	btn_mv_dwn = get_node(MoveDownButtonPath)
-	btn_rmv = get_node(RemoveButtonPath)
+	btn_mv_up = $VBoxContainer/ButtonRow/MoveUpButton
+	btn_mv_dwn = $VBoxContainer/ButtonRow/MoveDownButton
+	btn_rmv = $VBoxContainer/ButtonRow/RemoveItemButton
+	
 	
 	btn_rmv.connect("pressed", self, "on_btn_act", [0])
 	btn_mv_up.connect("pressed", self, "on_btn_act", [1])

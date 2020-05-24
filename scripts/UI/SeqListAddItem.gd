@@ -1,22 +1,15 @@
-extends NinePatchRect
+extends Control
 
-
-export(NodePath) var SeqTypePath
-export(NodePath) var AmountContainerPath
-
-export(NodePath) var AmountTextPath
-
-export(NodePath) var btnAddPath
 
 var seq_type : OptionButton
 var amount_container : HBoxContainer
 
-var txtedt_seq_amnt : TextEdit
+var seq_num_amnt : SpinBox
 
-var ammount_result : int
+var amount_result : int
 
-func get_ammount():
-	return ammount_result
+func get_amount():
+	return amount_result
 
 var _parent
 func set_parent(prnt):
@@ -29,7 +22,7 @@ func set_seq_idx(seq_idx:int):
 
 func set_seq_amnt(seq_amnt:int):
 	if seq_amnt > 0:
-		txtedt_seq_amnt.text = String(seq_amnt)
+		seq_num_amnt.value = seq_amnt
 
 onready var seq_item = TurtleSettings.get_turtle_cmd_str()
 
@@ -45,26 +38,29 @@ func seq_type_on_itm_selected(id):
 	fix_amnt_container(id)
 
 func on_btn_add_pressed():
-	ammount_result = get_node(AmountTextPath).text.to_int()
-	if amount_container.visible == false:
-		ammount_result = -1
-	
+	#var node_amnt = $DisplayLayout/AmountContainer/NumAmount
+	amount_result = seq_num_amnt.value
 	var slectd = seq_type.get_selected_id()
-	_parent.on_seq_list_item(slectd, ammount_result)
+	
+	if amount_result <= 0 and TurtleSettings.turtle_cmd_takes_extra(slectd):
+		$DisplayLayout/ButtonAdd/seq_invalid.play()
+		return
+	
+	if amount_container.visible == false:
+		amount_result = -1
+	
+	
+	_parent.on_seq_list_item(slectd, amount_result)
 	
 	self.queue_free()
 
 func _ready():
-	seq_type = get_node(SeqTypePath)
-	amount_container = get_node(AmountContainerPath)
-	txtedt_seq_amnt = get_node(AmountTextPath)
+	seq_type = $DisplayLayout/OptionButton
+	amount_container = $DisplayLayout/AmountContainer
+	seq_num_amnt = $DisplayLayout/AmountContainer/NumAmount
 	populate_seq()
 	seq_type.connect("item_selected", self, "seq_type_on_itm_selected")
 	
-	get_node(btnAddPath).connect("pressed", self, "on_btn_add_pressed")
+	$DisplayLayout/ButtonAdd.connect("pressed", self, "on_btn_add_pressed")
 	
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass

@@ -1,10 +1,18 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scenes/UIComp/ButtonStandardDefault.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scripts/UI/UI.gd" type="Script" id=2]
+[ext_resource path="res://sounds/seq_invalid.wav" type="AudioStream" id=4]
+[ext_resource path="res://theme/tur_dark_theme_mobile.tres" type="Theme" id=7]
 
-[sub_resource type="Animation" id=1]
-resource_name = "hide_list"
+[sub_resource type="Gradient" id=1]
+colors = PoolColorArray( 0.0784314, 0.0784314, 0.0784314, 0.392157, 0.0784314, 0.0784314, 0.0784314, 0.392157 )
+
+[sub_resource type="GradientTexture" id=2]
+gradient = SubResource( 1 )
+
+[sub_resource type="Animation" id=3]
+resource_name = "hide"
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:rect_position")
 tracks/0/interp = 1
@@ -15,23 +23,11 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 1 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 0, 40 ), Vector2( -200, 40 ) ]
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath(".:visible")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0, 1 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 1,
-"values": [ true, false ]
+"values": [ Vector2( 0, 0 ), Vector2( -600, 0 ) ]
 }
 
-[sub_resource type="Animation" id=2]
-resource_name = "hide_list (copy)"
+[sub_resource type="Animation" id=4]
+resource_name = "show"
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:rect_position")
 tracks/0/interp = 1
@@ -42,68 +38,99 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 1 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( -200, 40 ), Vector2( 0, 40 ) ]
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath(".:visible")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0, 1 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 1,
-"values": [ true, true ]
+"values": [ Vector2( -600, 0 ), Vector2( 0, 0 ) ]
 }
 
 [node name="UI" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource( 7 )
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-SeqButtonPath = NodePath("TopBar/ButtonSequence")
-RunButtonPath = NodePath("TopBar/ButtonRun")
-SeqScrollContainerPath = NodePath("ScrollContainer")
-SeqScrollListPath = NodePath("ScrollContainer/Sequence")
+SeqButtonPath = NodePath("layout/left-control/HBoxContainer/ButtonSequence")
+RunButtonPath = NodePath("layout/left-control/HBoxContainer/ButtonRun")
+SeqScrollControlPath = NodePath("layout/SeqListControl")
+SeqScrollListPath = NodePath("layout/SeqListControl/ScrollContainer/Sequence")
 
-[node name="TopBar" type="HBoxContainer" parent="."]
-margin_right = 608.0
-margin_bottom = 32.0
+[node name="Background" type="TextureRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = SubResource( 2 )
+expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ButtonSequence" parent="TopBar" instance=ExtResource( 1 )]
-margin_right = 200.0
-rect_min_size = Vector2( 200, 32 )
-text = "Sequence"
-
-[node name="ButtonRun" parent="TopBar" instance=ExtResource( 1 )]
-margin_left = 204.0
-margin_right = 404.0
-rect_min_size = Vector2( 200, 32 )
-text = "Run"
-
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
+[node name="layout" type="HBoxContainer" parent="."]
+anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = 40.0
-margin_right = 200.0
-margin_bottom = 6.10352e-05
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SeqListControl" type="Control" parent="layout"]
+margin_right = 600.0
+margin_bottom = 1080.0
+rect_min_size = Vector2( 600, 0 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="layout/SeqListControl"]
+anims/hide = SubResource( 3 )
+anims/show = SubResource( 4 )
+
+[node name="SeqListBackground" type="TextureRect" parent="layout/SeqListControl"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = SubResource( 2 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="layout/SeqListControl"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 300, 0 )
 rect_clip_content = false
 scroll_horizontal_enabled = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="ScrollContainer"]
-anims/hide_list = SubResource( 1 )
-"anims/hide_list (copy)" = SubResource( 2 )
-blend_times = [ "hide_list", "hide_list", 51.428 ]
-
-[node name="Sequence" type="VBoxContainer" parent="ScrollContainer"]
+[node name="Sequence" type="VBoxContainer" parent="layout/SeqListControl/ScrollContainer"]
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="left-control" type="Control" parent="layout"]
+margin_left = 604.0
+margin_right = 604.0
+margin_bottom = 1080.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="layout/left-control"]
+margin_left = 40.0
+margin_top = 40.0
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ButtonSequence" parent="layout/left-control/HBoxContainer" instance=ExtResource( 1 )]
+margin_right = 300.0
+margin_bottom = 107.0
+rect_min_size = Vector2( 300, 16 )
+text = "Sequence"
+
+[node name="ButtonRun" parent="layout/left-control/HBoxContainer" instance=ExtResource( 1 )]
+margin_left = 304.0
+margin_right = 416.0
+margin_bottom = 107.0
+text = "Run"
+
+[node name="seq_invalid" type="AudioStreamPlayer" parent="layout/left-control/HBoxContainer/ButtonRun"]
+stream = ExtResource( 4 )
